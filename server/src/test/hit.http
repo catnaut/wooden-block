@@ -1,0 +1,8 @@
+@baseUrl = http://localhost:3000
+
+### 获取总点击数
+GET {{baseUrl}}/hits/count
+
+### 获取特定房间的点击数（需要替换为实际的房间ID）
+@roomId = replace_with_actual_room_id
+GET {{baseUrl}}/rooms/{{roomId}}/hits/count
