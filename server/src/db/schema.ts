@@ -7,7 +7,7 @@ export const rooms = pgTable('rooms', {
   name: text('name').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 }, (table) => [
-  index('room_id_idx').on(table.id),
+  index('rooms_id_idx').on(table.id),
 ]);
 
 // 点击事件表
@@ -17,9 +17,9 @@ export const hits = pgTable('hits', {
   roomId: uuid('room_id').notNull(), // 关联到 rooms 表
   timestamp: timestamp('timestamp').notNull().defaultNow(),
 }, (table) => [
-  index('user_id_idx').on(table.userId),
-  index('timestamp_idx').on(table.timestamp),
-  index('room_id_hits_idx').on(table.roomId),
+  index('hits_user_id_idx').on(table.userId),
+  index('hits_timestamp_idx').on(table.timestamp),
+  index('hits_room_id_idx').on(table.roomId),
 ]);
 
 // 定义关系

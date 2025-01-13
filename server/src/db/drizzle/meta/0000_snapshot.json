@@ -1,5 +1,5 @@
 {
-  "id": "6ed86a5a-5094-48b8-873d-65f872206501",
+  "id": "45da4f5a-d322-49b0-a081-ed7a75e24457",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -20,6 +20,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "room_id": {
+          "name": "room_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
         "timestamp": {
           "name": "timestamp",
           "type": "timestamp",
@@ -29,8 +35,8 @@
         }
       },
       "indexes": {
-        "user_id_idx": {
-          "name": "user_id_idx",
+        "hits_user_id_idx": {
+          "name": "hits_user_id_idx",
           "columns": [
             {
               "expression": "user_id",
@@ -44,11 +50,26 @@
           "method": "btree",
           "with": {}
         },
-        "timestamp_idx": {
-          "name": "timestamp_idx",
+        "hits_timestamp_idx": {
+          "name": "hits_timestamp_idx",
           "columns": [
             {
               "expression": "timestamp",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "hits_room_id_idx": {
+          "name": "hits_room_id_idx",
+          "columns": [
+            {
+              "expression": "room_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -67,32 +88,48 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.total_hits": {
-      "name": "total_hits",
+    "public.rooms": {
+      "name": "rooms",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
           "notNull": true
         },
-        "count": {
-          "name": "count",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
-        "last_updated": {
-          "name": "last_updated",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "rooms_id_idx": {
+          "name": "rooms_id_idx",
+          "columns": [
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
