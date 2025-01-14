@@ -166,7 +166,7 @@ export default function Index() {
     };
   });
 
-  const triggerAnimation = useCallback((clickCount: number) => {
+  const triggerAnimation = useCallback((clickCount: number, showNumber: boolean = true) => {
     setCount(prev => prev + clickCount);
     
     // 触发震动（只在移动端且开启震动设置时）
@@ -177,14 +177,17 @@ export default function Index() {
     // 播放声音
     playSound();
 
-    setFloatingTexts(prev => [...prev, {
-      id: Date.now(),
-      offset: {
-        x: random(-30, 30),
-        y: random(-20, 20)
-      },
-      clickCount
-    }]);
+    // 只在显示数字时添加浮动文字
+    if (showNumber) {
+      setFloatingTexts(prev => [...prev, {
+        id: Date.now(),
+        offset: {
+          x: random(-30, 30),
+          y: random(-20, 20)
+        },
+        clickCount
+      }]);
+    }
     
     // 缩放动画
     scale.value = withSequence(
@@ -228,6 +231,9 @@ export default function Index() {
   const handlePress = useCallback(() => {
     clickBuffer.current.count += 1;
     
+    // 立即触发动画，但不显示数字
+    triggerAnimation(1, false);
+    
     // 清除之前的定时器
     if (clickBuffer.current.timeout) {
       clearTimeout(clickBuffer.current.timeout);
@@ -237,7 +243,10 @@ export default function Index() {
     clickBuffer.current.timeout = setTimeout(() => {
       const clickCount = clickBuffer.current.count;
       clickBuffer.current.count = 0;
-      triggerAnimation(clickCount);
+      // 最后一次点击结束后，显示总数
+      if (clickCount > 1) {
+        triggerAnimation(clickCount - 1, true);
+      }
     }, 200);
   }, []);
 
