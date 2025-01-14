@@ -1,5 +1,8 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
+import { createNodeWebSocket } from '@hono/node-ws'
+import type { WSContext } from 'hono/ws'
+
 import { db } from '@/db/index.js'
 import { count, eq, desc } from 'drizzle-orm'
 import { hits, rooms } from './db/schema.js'
@@ -7,6 +10,78 @@ import { zValidator } from '@hono/zod-validator'
 import { z } from 'zod'
 
 const app = new Hono()
+
+// 创建 WebSocket 实例
+export const { injectWebSocket, upgradeWebSocket } = createNodeWebSocket({ app })
+
+// 添加内存中的计数器和连接管理
+let totalClicks = 0
+const connections = new Map<WSContext<unknown>, { id: string }>()
+
+// 定义消息类型
+type ClickMessage = {
+  type: 'clicks'
+  clicks: { timestamp: number }[]
+}
+
+type InitMessage = {
+  type: 'init'
+  totalClicks: number
+}
+
+// 广播消息给其他客户端
+const broadcastMessage = (sender: WSContext<unknown>, message: any) => {
+  const messageStr = JSON.stringify(message)
+  connections.forEach((_, client) => {
+    if (client !== sender && client.readyState === 1) { // WebSocket.OPEN = 1
+      client.send(messageStr)
+    }
+  })
+}
+
+app.get('/ws', upgradeWebSocket((c) => ({
+  onMessage(event, ws) {
+    try {
+      const message = JSON.parse(event.data.toString())
+      
+      if (message.type === 'clicks') {
+        // 更新总点击数
+        totalClicks += message.clicks.length
+        
+        // 广播给其他连接
+        broadcastMessage(ws, message)
+      }
+    } catch (error) {
+      console.error('Error processing message:', error)
+    }
+  },
+  
+  onOpen(event, ws) {
+    // 生成唯一ID并保存连接信息
+    const connectionId = Math.random().toString(36).substring(2, 15)
+    connections.set(ws, { id: connectionId })
+    
+    // 发送初始化数据
+    const initMessage: InitMessage = {
+      type: 'init',
+      totalClicks
+    }
+    ws.send(JSON.stringify(initMessage))
+    
+    console.log('Client connected, total connections:', connections.size)
+  },
+  
+  onClose(event, ws) {
+    // 从连接集合中移除
+    connections.delete(ws)
+    console.log('Client disconnected, total connections:', connections.size)
+  },
+  
+  onError(event, ws) {
+    console.error('WebSocket error:', event)
+    connections.delete(ws)
+  }
+})))
 
 // 创建房间的请求体验证
 const createRoomSchema = z.object({
@@ -115,7 +190,9 @@ app.get('/rooms/:id/hits/count', async (c) => {
 const port = 3000
 console.log(`Server is running on http://localhost:${port}`)
 
-serve({
+const server = serve({
   fetch: app.fetch,
   port
 })
+
+injectWebSocket(server)
