@@ -17,7 +17,6 @@ import { useSettings } from "../hooks/useSettings";
 import { useSound } from "../hooks/useSound";
 import { useWebSocket } from "../hooks/useWebSocket";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Button, ButtonIcon } from "@/components/ui/button";
 
 // 生成随机数的辅助函数
 const random = (min: number, max: number) => {
@@ -172,6 +171,7 @@ export default function Index() {
   const rotate = useSharedValue("0deg");
   const [floatingTexts, setFloatingTexts] = useState<
     Array<{
+      id: number;
       offset: { x: number; y: number };
       clickCount: number;
       isOthersClick: boolean;
@@ -228,6 +228,7 @@ export default function Index() {
         setFloatingTexts((prev) => [
           ...prev,
           {
+            id: Math.random() * 1000000000,
             offset: {
               x: random(-30, 30),
               y: random(-20, 20),
@@ -355,6 +356,7 @@ export default function Index() {
           <View className="relative">
             {floatingTexts.map(({ id, offset, clickCount, isOthersClick }) => (
               <FloatingText
+                key={id}
                 onComplete={() => handleFloatingComplete(id)}
                 offset={offset}
                 clickCount={clickCount}
