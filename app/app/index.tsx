@@ -254,15 +254,24 @@ export default function Index() {
 
   return (
     <View className={`flex-1 ${settings.theme === 'dark' ? 'bg-[#1a1a1a]' : 'bg-[#f7f7f7]'}`}>
-      <Button
-        className="absolute top-10 left-5 rounded-xl p-2 w-12 h-12"
-        onPress={() => router.push('/settings')}
-        size="lg"
-      >
-        <ButtonIcon as={SettingIcon} />
-      </Button>
+      <View className="flex-1 items-center justify-center">
+        {/* Settings Button */}
+        <View className="absolute right-4 top-14">
+          <Pressable 
+            onPress={() => router.push('/settings')}
+            className="p-2 rounded-full active:opacity-70"
+            style={({ pressed }) => [
+              pressed && Platform.OS === 'ios' ? { opacity: 0.7 } : {}
+            ]}
+          >
+            <Ionicons 
+              name="settings-outline" 
+              size={24} 
+              color={settings.theme === 'dark' ? '#fff' : '#000'} 
+            />
+          </Pressable>
+        </View>
 
-      <View className="flex-1 justify-center items-center -mt-20">
         <View className="items-center mb-10">
           <Text className={`text-xl font-medium tracking-[0.5px] mb-2 ${
             settings.theme === 'dark' ? 'text-white/60' : 'text-black/60'

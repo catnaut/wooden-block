@@ -1,4 +1,4 @@
-import { View, Platform } from 'react-native';
+import { View, Platform, Pressable } from 'react-native';
 import { useCallback, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { useSettings } from '../hooks/useSettings';
@@ -34,19 +34,19 @@ export default function Settings() {
   return (
     <View className={`flex-1 px-4 pt-14 ${settings.theme === 'dark' ? 'bg-[#1a1a1a]' : 'bg-[#f7f7f7]'}`}>
       <HStack className="items-center mb-8">
-        <Button
-          variant="link"
+        <Pressable 
           onPress={() => router.back()}
-          className="p-2 -ml-2"
+          className="p-2 -ml-2 rounded-full active:opacity-70"
+          style={({ pressed }) => [
+            pressed && Platform.OS === 'ios' ? { opacity: 0.7 } : {}
+          ]}
         >
-          <ButtonIcon>
-            <Ionicons 
-              name="chevron-back" 
-              size={28} 
-              color={settings.theme === 'dark' ? '#fff' : '#000'} 
-            />
-          </ButtonIcon>
-        </Button>
+          <Ionicons 
+            name="chevron-back" 
+            size={28} 
+            color={settings.theme === 'dark' ? '#fff' : '#000'} 
+          />
+        </Pressable>
         <Text 
           size="3xl" 
           className={`font-bold ml-2 ${settings.theme === 'dark' ? 'text-white' : 'text-black'}`}
@@ -70,7 +70,7 @@ export default function Settings() {
           <Switch
             value={settings.theme === 'dark'}
             onValueChange={toggleTheme}
-            trackColor={{ false: '#E2E8F0', true: '#4A5568' }}
+            trackColor={{ false: '#E2E8F0', true: '#6750A4' }}
             thumbColor="#FFFFFF"
             ios_backgroundColor="#E2E8F0"
           />
@@ -86,7 +86,7 @@ export default function Settings() {
           <Switch
             value={settings.sound}
             onValueChange={toggleSound}
-            trackColor={{ false: '#E2E8F0', true: '#4A5568' }}
+            trackColor={{ false: '#E2E8F0', true: '#6750A4' }}
             thumbColor="#FFFFFF"
             ios_backgroundColor="#E2E8F0"
           />
@@ -103,7 +103,7 @@ export default function Settings() {
             <Switch
               value={settings.vibration}
               onValueChange={toggleVibration}
-              trackColor={{ false: '#E2E8F0', true: '#4A5568' }}
+              trackColor={{ false: '#E2E8F0', true: '#6750A4' }}
               thumbColor="#FFFFFF"
               ios_backgroundColor="#E2E8F0"
             />
@@ -128,16 +128,16 @@ export default function Settings() {
                 onChangeText={setServerUrl}
                 placeholder="输入服务器地址"
                 placeholderTextColor={settings.theme === 'dark' ? '#666' : '#999'}
-                className={settings.theme === 'dark' ? 'text-white' : 'text-black'}
+                className={`${settings.theme === 'dark' ? 'text-white border-[#313131]' : 'text-black border-[#E8E8E8]'}`}
               />
             </Input>
             <Button
               size="md"
               variant="solid"
-              action="primary"
+              className={settings.theme === 'dark' ? 'bg-[#6750A4] hover:bg-[#7B65B6] active:bg-[#8C7CC0]' : 'bg-[#6750A4] hover:bg-[#7B65B6] active:bg-[#8C7CC0]'}
               onPress={handleServerUrlSave}
             >
-              <ButtonText>保存</ButtonText>
+              <ButtonText className="text-white font-medium">保存</ButtonText>
             </Button>
           </HStack>
         </VStack>
