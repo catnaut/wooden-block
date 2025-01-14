@@ -53,3 +53,25 @@
     在整个过程中，始终参考[React Native官方文档](https://reactnative.dev/docs)，确保使用最新的React Native开发最佳实践。
 
     安装包使用 `npx expo install` 安装
+
+    ui 使用 gluestack-ui 组件库
+    使用方式
+    ```tsx
+      import {
+    Button,
+    ButtonText,
+    ButtonSpinner,
+    ButtonIcon,
+    ButtonGroup,
+  } from "@/components/ui/button"
+  export default () => (
+  <ButtonGroup>
+    <Button>
+      <ButtonText />
+      <ButtonSpinner />
+      <ButtonIcon />
+    </Button>
+  </ButtonGroup>
+);
+    ```
+    样式使用 nativewind 库
