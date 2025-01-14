@@ -199,7 +199,7 @@ export default function Index() {
   }, []);
 
   // WebSocket 集成
-  const { addClick } = useWebSocket(
+  const { addClick, isConnected, connectionError } = useWebSocket(
     handleTotalClicksUpdate,
     handleOthersClick
   );
@@ -207,6 +207,7 @@ export default function Index() {
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{ scale: scale.value }, { rotate: rotate.value }],
+      opacity: isConnected ? 1 : 0.5, // 未连接时降低透明度
     };
   });
 
@@ -281,6 +282,11 @@ export default function Index() {
   );
 
   const handlePress = useCallback(() => {
+    // 如果未连接，不允许点击
+    if (!isConnected) {
+      return;
+    }
+
     clickBuffer.current.count += 1;
 
     // 立即触发动画，但不显示数字
@@ -305,7 +311,7 @@ export default function Index() {
         triggerAnimation(clickCount, true);
       }
     }, 200);
-  }, [triggerAnimation, addClick]);
+  }, [triggerAnimation, addClick, isConnected]);
 
   const handleFloatingComplete = useCallback((id: number) => {
     setFloatingTexts((prev) => prev.filter((item) => item.id !== id));
@@ -352,7 +358,11 @@ export default function Index() {
           </Text>
         </View>
 
-        <Pressable onPress={handlePress} className="p-5 rounded-[32px] mt-5">
+        <Pressable
+          onPress={handlePress}
+          className="p-5 rounded-[32px] mt-5"
+          disabled={!isConnected}
+        >
           <View className="relative">
             {floatingTexts.map(({ id, offset, clickCount, isOthersClick }) => (
               <FloatingText
@@ -377,6 +387,25 @@ export default function Index() {
             </Animated.View>
           </View>
         </Pressable>
+
+        {/* 连接状态提示 */}
+        {connectionError && (
+          <View className="absolute bottom-10 left-0 right-0 px-4">
+            <View
+              className={`rounded-lg p-3 ${
+                settings.theme === "dark" ? "bg-red-900/50" : "bg-red-100"
+              }`}
+            >
+              <Text
+                className={`text-center ${
+                  settings.theme === "dark" ? "text-red-100" : "text-red-800"
+                }`}
+              >
+                {connectionError}
+              </Text>
+            </View>
+          </View>
+        )}
       </View>
     </View>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { useSettings } from "./useSettings";
 
 interface ClickEvent {
@@ -25,6 +25,8 @@ export const useWebSocket = (
   const reconnectAttemptsRef = useRef(0);
   const reconnectTimerRef = useRef<NodeJS.Timeout | null>(null);
   const { settings } = useSettings();
+  const [isConnected, setIsConnected] = useState(false);
+  const [connectionError, setConnectionError] = useState<string | null>(null);
 
   // 发送点击事件队列
   const sendClickQueue = useCallback(() => {
@@ -44,6 +46,10 @@ export const useWebSocket = (
 
   // 添加点击事件到队列
   const addClick = useCallback(() => {
+    if (!isConnected) {
+      return false; // 如果未连接，不允许点击
+    }
+
     // 添加点击事件到队列
     clickQueueRef.current.push({
       timestamp: Date.now(),
@@ -58,7 +64,9 @@ export const useWebSocket = (
     timerRef.current = setTimeout(() => {
       sendClickQueue();
     }, CLICK_BUFFER_INTERVAL);
-  }, [sendClickQueue]);
+
+    return true; // 点击成功
+  }, [sendClickQueue, isConnected]);
 
   // 创建 WebSocket 连接
   const createWebSocket = useCallback(() => {
@@ -67,12 +75,20 @@ export const useWebSocket = (
       wsRef.current.close();
     }
 
+    setIsConnected(false);
+    // 只在非重连状态下清除错误信息
+    if (reconnectAttemptsRef.current === 0) {
+      setConnectionError(null);
+    }
+
     const wsUrl = `ws://${settings.serverUrl}/ws`;
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 
     ws.onopen = () => {
       console.log("WebSocket connected");
+      setIsConnected(true);
+      setConnectionError(null); // 只在连接成功时清除错误信息
       reconnectAttemptsRef.current = 0; // 重置重连次数
     };
 
@@ -108,22 +124,29 @@ export const useWebSocket = (
 
     ws.onerror = (error) => {
       console.error("WebSocket error:", error);
+      if (reconnectAttemptsRef.current === 0) {
+        setConnectionError("连接服务器失败");
+      }
     };
 
     ws.onclose = () => {
       console.log("WebSocket disconnected");
+      setIsConnected(false);
       // 在连接断开时尝试重连
       if (reconnectAttemptsRef.current < MAX_RECONNECT_ATTEMPTS) {
+        const attempt = reconnectAttemptsRef.current + 1;
+        setConnectionError(
+          `连接断开，正在尝试重连... (${attempt}/${MAX_RECONNECT_ATTEMPTS})`
+        );
         console.log(
-          `Attempting to reconnect... (${
-            reconnectAttemptsRef.current + 1
-          }/${MAX_RECONNECT_ATTEMPTS})`
+          `Attempting to reconnect... (${attempt}/${MAX_RECONNECT_ATTEMPTS})`
         );
         reconnectTimerRef.current = setTimeout(() => {
           reconnectAttemptsRef.current += 1;
           createWebSocket();
         }, RECONNECT_INTERVAL);
       } else {
+        setConnectionError("连接失败，请检查网络后刷新页面重试");
         console.log("Max reconnection attempts reached");
       }
     };
@@ -148,5 +171,7 @@ export const useWebSocket = (
 
   return {
     addClick,
+    isConnected,
+    connectionError,
   };
 };
