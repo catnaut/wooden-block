@@ -242,7 +242,7 @@ export default function Index() {
       const clickCount = clickBuffer.current.count;
       clickBuffer.current.count = 0;
       // 最后一次点击结束后，显示总数
-      if (clickCount > 1) {
+      if (clickCount > 0) {
         triggerAnimation(clickCount - 1, true);
       }
     }, 200);
