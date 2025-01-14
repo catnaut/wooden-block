@@ -1,4 +1,4 @@
-import { Text, View, Pressable, StyleSheet } from "react-native";
+import { Text, View, Pressable } from "react-native";
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
@@ -239,52 +239,37 @@ export default function Index() {
   }, []);
 
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: settings.theme === 'dark' ? "#1a1a1a" : "#f7f7f7" }
-      ]}
-    >
+    <View className={`flex-1 ${settings.theme === 'dark' ? 'bg-[#1a1a1a]' : 'bg-[#f7f7f7]'}`}>
       <Pressable 
-        style={styles.settingsButton}
+        className="absolute top-[50px] right-5 z-10"
         onPress={() => router.push('/settings')}
       >
-        <View style={[
-          styles.settingsButtonInner
-        ]}>
-          <Text style={[
-            styles.settingsText,
-            { color: settings.theme === 'dark' ? "#ffffff" : "#000000" }
-          ]}>设置</Text>
+        <View className="px-4 py-2 rounded-2xl bg-white shadow-lg">
+          <Text className={`text-base font-medium tracking-[0.5px] ${
+            settings.theme === 'dark' ? 'text-black' : 'text-black'
+          }`}>设置</Text>
         </View>
       </Pressable>
 
-      <View style={styles.mainContent}>
-        <View style={styles.meritContainer}>
-          <Text style={[
-            styles.meritLabel,
-            { color: settings.theme === 'dark' ? "rgba(255, 255, 255, 0.6)" : "rgba(0, 0, 0, 0.6)" }
-          ]}>
+      <View className="flex-1 justify-center items-center -mt-20">
+        <View className="items-center mb-10">
+          <Text className={`text-xl font-medium tracking-[0.5px] mb-2 ${
+            settings.theme === 'dark' ? 'text-white/60' : 'text-black/60'
+          }`}>
             功德
           </Text>
-          <Text style={[
-            styles.meritCount,
-            { color: settings.theme === 'dark' ? "#ffffff" : "#000000" }
-          ]}>
+          <Text className={`text-[64px] font-bold tracking-[-1px] ${
+            settings.theme === 'dark' ? 'text-white' : 'text-black'
+          }`}>
             {count}
           </Text>
         </View>
 
         <Pressable 
           onPress={handlePress}
-          style={({ pressed }) => [
-            styles.woodenFishContainer,
-            {
-              transform: [{ scale: pressed ? 0.98 : 1 }],
-            }
-          ]}
+          className="p-5 rounded-[32px] mt-5"
         >
-          <View style={{ position: 'relative' }}>
+          <View className="relative">
             {floatingTexts.map(({ id, offset, clickCount }) => (
               <FloatingText 
                 key={id} 
@@ -311,65 +296,3 @@ export default function Index() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  settingsButton: {
-    position: 'absolute',
-    top: 50,
-    right: 20,
-    zIndex: 1,
-  },
-  settingsButtonInner: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 16,
-    backgroundColor: 'white',
-    // Android 阴影
-    elevation: 4,
-    // iOS 阴影
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    // 确保背景色完全不透明，避免阴影显示问题
-    overflow: 'visible',
-  },
-  settingsText: {
-    fontSize: 16,
-    fontWeight: '500',
-    letterSpacing: 0.5,
-  },
-  mainContent: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: -80,
-  },
-  meritContainer: {
-    alignItems: 'center',
-    marginBottom: 40,
-  },
-  meritLabel: {
-    fontSize: 20,
-    fontWeight: '500',
-    letterSpacing: 0.5,
-    marginBottom: 8,
-    opacity: 0.85,
-  },
-  meritCount: {
-    fontSize: 64,
-    fontWeight: 'bold',
-    letterSpacing: -1,
-  },
-  woodenFishContainer: {
-    padding: 20,
-    borderRadius: 32,
-    marginTop: 20,
-  },
-});

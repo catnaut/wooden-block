@@ -1,4 +1,4 @@
-import { View, Text, Switch, Pressable, StyleSheet } from 'react-native';
+import { View, Text, Switch, Pressable } from 'react-native';
 import { useCallback } from 'react';
 import { useRouter } from 'expo-router';
 import { useSettings } from '../hooks/useSettings';
@@ -20,56 +20,41 @@ export default function Settings() {
   }, [settings.vibration]);
 
   return (
-    <View style={[
-      styles.container,
-      { backgroundColor: settings.theme === 'dark' ? '#1a1a1a' : '#f7f7f7' }
-    ]}>
-      <View style={[
-        styles.header,
-        { 
-          backgroundColor: settings.theme === 'dark' ? '#242424' : '#ffffff',
-          borderBottomColor: settings.theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)',
-        }
-      ]}>
+    <View className={`flex-1 ${settings.theme === 'dark' ? 'bg-[#1a1a1a]' : 'bg-[#f7f7f7]'}`}>
+      <View className={`pt-[50px] px-5 pb-5 border-b shadow-sm ${
+        settings.theme === 'dark' 
+          ? 'bg-[#242424] border-white/[0.08]' 
+          : 'bg-white border-black/[0.08]'
+      }`}>
         <Pressable 
-          style={styles.backButton}
+          className="mb-5"
           onPress={() => router.back()}
         >
-          <View style={[
-            styles.backButtonInner,
-            { 
-              backgroundColor: settings.theme === 'dark' 
-                ? 'rgba(255, 255, 255, 0.08)' 
-                : 'rgba(0, 0, 0, 0.05)',
-            }
-          ]}>
-            <Text style={[
-              styles.backText,
-              { color: settings.theme === 'dark' ? '#ffffff' : '#000000' }
-            ]}>返回</Text>
+          <View className={`px-4 py-2 rounded-2xl self-start ${
+            settings.theme === 'dark' 
+              ? 'bg-white/[0.08]' 
+              : 'bg-black/[0.05]'
+          }`}>
+            <Text className={`text-base font-medium tracking-[0.5px] ${
+              settings.theme === 'dark' ? 'text-white' : 'text-black'
+            }`}>返回</Text>
           </View>
         </Pressable>
 
-        <Text style={[
-          styles.title,
-          { color: settings.theme === 'dark' ? '#ffffff' : '#000000' }
-        ]}>设置</Text>
+        <Text className={`text-[34px] font-bold tracking-[-0.5px] ${
+          settings.theme === 'dark' ? 'text-white' : 'text-black'
+        }`}>设置</Text>
       </View>
 
-      <View style={[
-        styles.settingsList,
-        { 
-          backgroundColor: settings.theme === 'dark' ? '#242424' : '#ffffff',
-        }
-      ]}>
-        <View style={[
-          styles.settingItem,
-          { borderBottomColor: settings.theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)' }
-        ]}>
-          <Text style={[
-            styles.settingText,
-            { color: settings.theme === 'dark' ? '#ffffff' : '#000000' }
-          ]}>深色模式</Text>
+      <View className={`mt-4 mx-4 rounded-[28px] overflow-hidden shadow-md ${
+        settings.theme === 'dark' ? 'bg-[#242424]' : 'bg-white'
+      }`}>
+        <View className={`flex-row justify-between items-center py-5 px-6 border-b ${
+          settings.theme === 'dark' ? 'border-white/[0.08]' : 'border-black/[0.08]'
+        }`}>
+          <Text className={`text-[17px] font-medium tracking-[0.15px] ${
+            settings.theme === 'dark' ? 'text-white' : 'text-black'
+          }`}>深色模式</Text>
           <Switch
             value={settings.theme === 'dark'}
             onValueChange={toggleTheme}
@@ -79,14 +64,12 @@ export default function Settings() {
           />
         </View>
 
-        <View style={[
-          styles.settingItem,
-          { borderBottomColor: settings.theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)' }
-        ]}>
-          <Text style={[
-            styles.settingText,
-            { color: settings.theme === 'dark' ? '#ffffff' : '#000000' }
-          ]}>音效</Text>
+        <View className={`flex-row justify-between items-center py-5 px-6 border-b ${
+          settings.theme === 'dark' ? 'border-white/[0.08]' : 'border-black/[0.08]'
+        }`}>
+          <Text className={`text-[17px] font-medium tracking-[0.15px] ${
+            settings.theme === 'dark' ? 'text-white' : 'text-black'
+          }`}>音效</Text>
           <Switch
             value={settings.sound}
             onValueChange={toggleSound}
@@ -96,14 +79,12 @@ export default function Settings() {
           />
         </View>
 
-        <View style={[
-          styles.settingItem,
-          { borderBottomColor: settings.theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)' }
-        ]}>
-          <Text style={[
-            styles.settingText,
-            { color: settings.theme === 'dark' ? '#ffffff' : '#000000' }
-          ]}>震动</Text>
+        <View className={`flex-row justify-between items-center py-5 px-6 border-b ${
+          settings.theme === 'dark' ? 'border-white/[0.08]' : 'border-black/[0.08]'
+        }`}>
+          <Text className={`text-[17px] font-medium tracking-[0.15px] ${
+            settings.theme === 'dark' ? 'text-white' : 'text-black'
+          }`}>震动</Text>
           <Switch
             value={settings.vibration}
             onValueChange={toggleVibration}
@@ -115,70 +96,4 @@ export default function Settings() {
       </View>
     </View>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    paddingTop: 50,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-    borderBottomWidth: 1,
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-  },
-  backButton: {
-    marginBottom: 20,
-  },
-  backButtonInner: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 16,
-    alignSelf: 'flex-start',
-  },
-  backText: {
-    fontSize: 16,
-    fontWeight: '500',
-    letterSpacing: 0.5,
-  },
-  title: {
-    fontSize: 34,
-    fontWeight: 'bold',
-    letterSpacing: -0.5,
-  },
-  settingsList: {
-    marginTop: 16,
-    marginHorizontal: 16,
-    borderRadius: 28,
-    overflow: 'hidden',
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  settingItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 20,
-    paddingHorizontal: 24,
-    borderBottomWidth: 1,
-  },
-  settingText: {
-    fontSize: 17,
-    fontWeight: '500',
-    letterSpacing: 0.15,
-  },
-}); 
+} 
