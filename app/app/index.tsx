@@ -255,7 +255,7 @@ export default function Index() {
   return (
     <View className={`flex-1 ${settings.theme === 'dark' ? 'bg-[#1a1a1a]' : 'bg-[#f7f7f7]'}`}>
       <Button
-        className="absolute top-5 left-5 rounded-xl p-2 w-12 h-12"
+        className="absolute top-10 left-5 rounded-xl p-2 w-12 h-12"
         onPress={() => router.push('/settings')}
         size="lg"
       >
