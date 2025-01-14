@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1736856218993,
+      "tag": "0000_dark_doctor_spectrum",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1736856352030,
+      "tag": "0001_sleepy_anthem",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1736856828549,
+      "tag": "0002_smooth_susan_delgado",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1736857031279,
+      "tag": "0003_ambitious_demogoblin",
+      "breakpoints": true
+    }
+  ]
+}

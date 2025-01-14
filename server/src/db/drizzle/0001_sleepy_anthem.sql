@@ -1,0 +1,1 @@
+DROP TABLE "total_hits" CASCADE;
