@@ -1,4 +1,4 @@
-import { Text, View, Pressable } from "react-native";
+import { Text, View, Pressable, Platform } from "react-native";
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
@@ -14,6 +14,7 @@ import Animated, {
 } from "react-native-reanimated";
 import Svg, { Path, G } from "react-native-svg";
 import { useSettings } from '../hooks/useSettings';
+import { useSound } from '../hooks/useSound';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Button, ButtonIcon } from "@/components/ui/button";
 
@@ -137,6 +138,7 @@ const FloatingText = ({
 export default function Index() {
   const router = useRouter();
   const { settings } = useSettings();
+  const { playSound } = useSound();
   const [count, setCount] = useState(0);
   const scale = useSharedValue(1);
   const rotate = useSharedValue('0deg');
@@ -167,10 +169,13 @@ export default function Index() {
   const triggerAnimation = useCallback((clickCount: number) => {
     setCount(prev => prev + clickCount);
     
-    // 触发震动
-    if (settings.vibration) {
+    // 触发震动（只在移动端且开启震动设置时）
+    if (settings.vibration && Platform.OS !== 'web') {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
+
+    // 播放声音
+    playSound();
 
     setFloatingTexts(prev => [...prev, {
       id: Date.now(),
@@ -218,7 +223,7 @@ export default function Index() {
         easing: Easing.bezier(0.25, 0.1, 0.25, 1),
       })
     );
-  }, [settings]);
+  }, [settings, playSound]);
 
   const handlePress = useCallback(() => {
     clickBuffer.current.count += 1;

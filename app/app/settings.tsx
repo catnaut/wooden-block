@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 import { useCallback } from 'react';
 import { useRouter } from 'expo-router';
 import { useSettings } from '../hooks/useSettings';
@@ -66,7 +66,6 @@ export default function Settings() {
             onValueChange={toggleTheme}
             trackColor={{ false: '#E2E8F0', true: '#4A5568' }}
             thumbColor="#FFFFFF"
-            activeThumbColor="#FFFFFF"
             ios_backgroundColor="#E2E8F0"
           />
         </HStack>
@@ -83,27 +82,27 @@ export default function Settings() {
             onValueChange={toggleSound}
             trackColor={{ false: '#E2E8F0', true: '#4A5568' }}
             thumbColor="#FFFFFF"
-            activeThumbColor="#FFFFFF"
             ios_backgroundColor="#E2E8F0"
           />
         </HStack>
 
-        <HStack className="justify-between items-center">
-          <Text 
-            size="lg"
-            className={settings.theme === 'dark' ? 'text-white' : 'text-black'}
-          >
-            震动
-          </Text>
-          <Switch
-            value={settings.vibration}
-            onValueChange={toggleVibration}
-            trackColor={{ false: '#E2E8F0', true: '#4A5568' }}
-            thumbColor="#FFFFFF"
-            activeThumbColor="#FFFFFF"
-            ios_backgroundColor="#E2E8F0"
-          />
-        </HStack>
+        {Platform.OS !== 'web' && (
+          <HStack className="justify-between items-center">
+            <Text 
+              size="lg"
+              className={settings.theme === 'dark' ? 'text-white' : 'text-black'}
+            >
+              震动
+            </Text>
+            <Switch
+              value={settings.vibration}
+              onValueChange={toggleVibration}
+              trackColor={{ false: '#E2E8F0', true: '#4A5568' }}
+              thumbColor="#FFFFFF"
+              ios_backgroundColor="#E2E8F0"
+            />
+          </HStack>
+        )}
       </VStack>
     </View>
   );
