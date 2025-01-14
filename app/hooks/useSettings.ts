@@ -1,9 +1,9 @@
-import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface Settings {
-  theme: 'light' | 'dark';
+  theme: "light" | "dark";
   sound: boolean;
   vibration: boolean;
   serverUrl: string;
@@ -18,10 +18,10 @@ export const useSettings = create<SettingsState>()(
   persist(
     (set) => ({
       settings: {
-        theme: 'dark',
+        theme: "dark",
         sound: true,
         vibration: true,
-        serverUrl: 'http://localhost:3000',
+        serverUrl: "localhost:3000",
       },
       updateSettings: (newSettings) =>
         set((state) => ({
@@ -29,8 +29,8 @@ export const useSettings = create<SettingsState>()(
         })),
     }),
     {
-      name: 'settings-storage',
+      name: "settings-storage",
       storage: createJSONStorage(() => AsyncStorage),
     }
   )
-); 
+);
