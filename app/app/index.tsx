@@ -14,6 +14,8 @@ import Animated, {
 } from "react-native-reanimated";
 import Svg, { Path, G } from "react-native-svg";
 import { useSettings } from '../hooks/useSettings';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { Button, ButtonIcon } from "@/components/ui/button";
 
 // 生成随机数的辅助函数
 const random = (min: number, max: number) => {
@@ -240,16 +242,13 @@ export default function Index() {
 
   return (
     <View className={`flex-1 ${settings.theme === 'dark' ? 'bg-[#1a1a1a]' : 'bg-[#f7f7f7]'}`}>
-      <Pressable 
-        className="absolute top-[50px] right-5 z-10"
+      <Button
+        className="absolute top-5 left-5 rounded-xl p-2 w-12 h-12"
         onPress={() => router.push('/settings')}
+        size="lg"
       >
-        <View className="px-4 py-2 rounded-2xl bg-white shadow-lg">
-          <Text className={`text-base font-medium tracking-[0.5px] ${
-            settings.theme === 'dark' ? 'text-black' : 'text-black'
-          }`}>设置</Text>
-        </View>
-      </Pressable>
+        <ButtonIcon as={SettingIcon} />
+      </Button>
 
       <View className="flex-1 justify-center items-center -mt-20">
         <View className="items-center mb-10">
@@ -295,4 +294,12 @@ export default function Index() {
       </View>
     </View>
   );
+}
+
+const SettingIcon = () => {
+  const { settings } = useSettings();
+
+  return (
+    <Ionicons name="settings-outline" size={24} color={settings.theme === 'dark' ? 'white' : 'black'} />
+  )
 }

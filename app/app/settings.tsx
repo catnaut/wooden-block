@@ -1,7 +1,13 @@
-import { View, Text, Switch, Pressable } from 'react-native';
+import { View } from 'react-native';
 import { useCallback } from 'react';
 import { useRouter } from 'expo-router';
 import { useSettings } from '../hooks/useSettings';
+import { Switch } from '@/components/ui/switch';
+import { Button, ButtonIcon } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
+import { VStack } from "@/components/ui/vstack";
+import { HStack } from "@/components/ui/hstack";
+import { Ionicons } from '@expo/vector-icons';
 
 export default function Settings() {
   const router = useRouter();
@@ -20,80 +26,85 @@ export default function Settings() {
   }, [settings.vibration]);
 
   return (
-    <View className={`flex-1 ${settings.theme === 'dark' ? 'bg-[#1a1a1a]' : 'bg-[#f7f7f7]'}`}>
-      <View className={`pt-[50px] px-5 pb-5 border-b shadow-sm ${
-        settings.theme === 'dark' 
-          ? 'bg-[#242424] border-white/[0.08]' 
-          : 'bg-white border-black/[0.08]'
-      }`}>
-        <Pressable 
-          className="mb-5"
+    <View className={`flex-1 px-4 pt-14 ${settings.theme === 'dark' ? 'bg-[#1a1a1a]' : 'bg-[#f7f7f7]'}`}>
+      <HStack className="items-center mb-8">
+        <Button
+          variant="link"
           onPress={() => router.back()}
+          className="p-2 -ml-2"
         >
-          <View className={`px-4 py-2 rounded-2xl self-start ${
-            settings.theme === 'dark' 
-              ? 'bg-white/[0.08]' 
-              : 'bg-black/[0.05]'
-          }`}>
-            <Text className={`text-base font-medium tracking-[0.5px] ${
-              settings.theme === 'dark' ? 'text-white' : 'text-black'
-            }`}>返回</Text>
-          </View>
-        </Pressable>
+          <ButtonIcon>
+            <Ionicons 
+              name="chevron-back" 
+              size={28} 
+              color={settings.theme === 'dark' ? '#fff' : '#000'} 
+            />
+          </ButtonIcon>
+        </Button>
+        <Text 
+          size="3xl" 
+          className={`font-bold ml-2 ${settings.theme === 'dark' ? 'text-white' : 'text-black'}`}
+        >
+          设置
+        </Text>
+      </HStack>
 
-        <Text className={`text-[34px] font-bold tracking-[-0.5px] ${
-          settings.theme === 'dark' ? 'text-white' : 'text-black'
-        }`}>设置</Text>
-      </View>
-
-      <View className={`mt-4 mx-4 rounded-[28px] overflow-hidden shadow-md ${
-        settings.theme === 'dark' ? 'bg-[#242424]' : 'bg-white'
-      }`}>
-        <View className={`flex-row justify-between items-center py-5 px-6 border-b ${
-          settings.theme === 'dark' ? 'border-white/[0.08]' : 'border-black/[0.08]'
-        }`}>
-          <Text className={`text-[17px] font-medium tracking-[0.15px] ${
-            settings.theme === 'dark' ? 'text-white' : 'text-black'
-          }`}>深色模式</Text>
+      <VStack 
+        className={`rounded-3xl p-4 space-y-6 ${
+          settings.theme === 'dark' ? 'bg-[#242424]' : 'bg-white'
+        }`}
+      >
+        <HStack className="justify-between items-center">
+          <Text 
+            size="lg"
+            className={settings.theme === 'dark' ? 'text-white' : 'text-black'}
+          >
+            深色模式
+          </Text>
           <Switch
             value={settings.theme === 'dark'}
             onValueChange={toggleTheme}
-            trackColor={{ false: '#767577', true: '#4ECDC4' }}
-            thumbColor={settings.theme === 'dark' ? '#ffffff' : '#f4f3f4'}
-            ios_backgroundColor="#3e3e3e"
+            trackColor={{ false: '#E2E8F0', true: '#4A5568' }}
+            thumbColor="#FFFFFF"
+            activeThumbColor="#FFFFFF"
+            ios_backgroundColor="#E2E8F0"
           />
-        </View>
+        </HStack>
 
-        <View className={`flex-row justify-between items-center py-5 px-6 border-b ${
-          settings.theme === 'dark' ? 'border-white/[0.08]' : 'border-black/[0.08]'
-        }`}>
-          <Text className={`text-[17px] font-medium tracking-[0.15px] ${
-            settings.theme === 'dark' ? 'text-white' : 'text-black'
-          }`}>音效</Text>
+        <HStack className="justify-between items-center">
+          <Text 
+            size="lg"
+            className={settings.theme === 'dark' ? 'text-white' : 'text-black'}
+          >
+            音效
+          </Text>
           <Switch
             value={settings.sound}
             onValueChange={toggleSound}
-            trackColor={{ false: '#767577', true: '#4ECDC4' }}
-            thumbColor={settings.sound ? '#ffffff' : '#f4f3f4'}
-            ios_backgroundColor="#3e3e3e"
+            trackColor={{ false: '#E2E8F0', true: '#4A5568' }}
+            thumbColor="#FFFFFF"
+            activeThumbColor="#FFFFFF"
+            ios_backgroundColor="#E2E8F0"
           />
-        </View>
+        </HStack>
 
-        <View className={`flex-row justify-between items-center py-5 px-6 border-b ${
-          settings.theme === 'dark' ? 'border-white/[0.08]' : 'border-black/[0.08]'
-        }`}>
-          <Text className={`text-[17px] font-medium tracking-[0.15px] ${
-            settings.theme === 'dark' ? 'text-white' : 'text-black'
-          }`}>震动</Text>
+        <HStack className="justify-between items-center">
+          <Text 
+            size="lg"
+            className={settings.theme === 'dark' ? 'text-white' : 'text-black'}
+          >
+            震动
+          </Text>
           <Switch
             value={settings.vibration}
             onValueChange={toggleVibration}
-            trackColor={{ false: '#767577', true: '#4ECDC4' }}
-            thumbColor={settings.vibration ? '#ffffff' : '#f4f3f4'}
-            ios_backgroundColor="#3e3e3e"
+            trackColor={{ false: '#E2E8F0', true: '#4A5568' }}
+            thumbColor="#FFFFFF"
+            activeThumbColor="#FFFFFF"
+            ios_backgroundColor="#E2E8F0"
           />
-        </View>
-      </View>
+        </HStack>
+      </VStack>
     </View>
   );
-} 
+}
