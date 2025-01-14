@@ -6,6 +6,7 @@ interface Settings {
   theme: 'light' | 'dark';
   sound: boolean;
   vibration: boolean;
+  serverUrl: string;
 }
 
 interface SettingsState {
@@ -20,6 +21,7 @@ export const useSettings = create<SettingsState>()(
         theme: 'dark',
         sound: true,
         vibration: true,
+        serverUrl: 'http://localhost:3000',
       },
       updateSettings: (newSettings) =>
         set((state) => ({

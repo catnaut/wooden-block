@@ -1,17 +1,19 @@
 import { View, Platform } from 'react-native';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { useSettings } from '../hooks/useSettings';
 import { Switch } from '@/components/ui/switch';
-import { Button, ButtonIcon } from "@/components/ui/button";
+import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Ionicons } from '@expo/vector-icons';
+import { Input, InputField } from "@/components/ui/input";
 
 export default function Settings() {
   const router = useRouter();
   const { settings, updateSettings } = useSettings();
+  const [serverUrl, setServerUrl] = useState(settings.serverUrl);
 
   const toggleTheme = useCallback(() => {
     updateSettings({ theme: settings.theme === 'dark' ? 'light' : 'dark' });
@@ -24,6 +26,10 @@ export default function Settings() {
   const toggleVibration = useCallback(() => {
     updateSettings({ vibration: settings.vibration? false : true });
   }, [settings.vibration]);
+
+  const handleServerUrlSave = useCallback(() => {
+    updateSettings({ serverUrl });
+  }, [serverUrl]);
 
   return (
     <View className={`flex-1 px-4 pt-14 ${settings.theme === 'dark' ? 'bg-[#1a1a1a]' : 'bg-[#f7f7f7]'}`}>
@@ -103,6 +109,38 @@ export default function Settings() {
             />
           </HStack>
         )}
+
+        <VStack space="xs">
+          <Text 
+            size="lg"
+            className={settings.theme === 'dark' ? 'text-white' : 'text-black'}
+          >
+            服务器地址
+          </Text>
+          <HStack space="sm">
+            <Input
+              variant="outline"
+              size="md"
+              className="flex-1"
+            >
+              <InputField
+                value={serverUrl}
+                onChangeText={setServerUrl}
+                placeholder="输入服务器地址"
+                placeholderTextColor={settings.theme === 'dark' ? '#666' : '#999'}
+                className={settings.theme === 'dark' ? 'text-white' : 'text-black'}
+              />
+            </Input>
+            <Button
+              size="md"
+              variant="solid"
+              action="primary"
+              onPress={handleServerUrlSave}
+            >
+              <ButtonText>保存</ButtonText>
+            </Button>
+          </HStack>
+        </VStack>
       </VStack>
     </View>
   );
