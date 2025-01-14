@@ -168,12 +168,10 @@ export default function Index() {
 
   const triggerAnimation = useCallback((clickCount: number, showNumber: boolean = true) => {
     setCount(prev => prev + clickCount);
-    
     // 触发震动（只在移动端且开启震动设置时）
-    if (settings.vibration && Platform.OS !== 'web') {
+    if (Platform.OS !== 'web' && settings.vibration) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-
     // 播放声音
     playSound();
 
@@ -226,7 +224,7 @@ export default function Index() {
         easing: Easing.bezier(0.25, 0.1, 0.25, 1),
       })
     );
-  }, [settings, playSound]);
+  }, [settings, playSound, scale, rotate, setFloatingTexts]);
 
   const handlePress = useCallback(() => {
     clickBuffer.current.count += 1;
@@ -248,7 +246,7 @@ export default function Index() {
         triggerAnimation(clickCount - 1, true);
       }
     }, 200);
-  }, []);
+  }, [triggerAnimation]);
 
   const handleFloatingComplete = useCallback((id: number) => {
     setFloatingTexts(prev => prev.filter(item => item.id !== id));

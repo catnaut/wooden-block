@@ -18,11 +18,11 @@ export default function Settings() {
   }, [settings.theme]);
 
   const toggleSound = useCallback(() => {
-    updateSettings({ sound: !settings.sound });
+    updateSettings({ sound: settings.sound? false : true });
   }, [settings.sound]);
 
   const toggleVibration = useCallback(() => {
-    updateSettings({ vibration: !settings.vibration });
+    updateSettings({ vibration: settings.vibration? false : true });
   }, [settings.vibration]);
 
   return (

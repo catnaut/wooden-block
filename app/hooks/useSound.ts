@@ -24,15 +24,16 @@ export const useSound = () => {
   }, []);
 
   const playSound = useCallback(async () => {
-    if (!settings.sound || !sound.current) return;
+    if (!settings.sound) return;
     
     try {
+      if (!sound.current) return;
       await sound.current.setPositionAsync(0);
       await sound.current.playAsync();
     } catch (error) {
       console.error('Error playing sound:', error);
     }
-  }, [settings.sound]);
+  }, [settings]);
 
   return { playSound };
 }; 
