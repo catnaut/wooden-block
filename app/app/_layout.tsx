@@ -1,10 +1,13 @@
 import { Stack } from "expo-router";
 
+import "@/global.css";
+import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
+
 export default function Layout() {
   return (
-    <Stack screenOptions={{
-      headerShown: false,
-      animation: 'fade',
-    }} />
+    <GluestackUIProvider mode="light"><Stack screenOptions={{
+        headerShown: false,
+        animation: 'fade',
+      }} /></GluestackUIProvider>
   );
 }
